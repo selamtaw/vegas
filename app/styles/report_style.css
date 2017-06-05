@@ -1,0 +1,17 @@
+
+#mainContainer {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#reportHeader{
+    text-align: center;
+}
+/*.panel-heading a{
+        color: white
+}*/
+#tableDiv {
+    height: 20em;
+}
+#tableDiv{
+    width: 70%;
+}

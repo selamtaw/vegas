@@ -1,0 +1,70 @@
+<div  id="mainContainer">
+    
+        <div class="row">
+            <div class="col-sm-3" style="height: 100%;">
+                <br>
+                <div class="panel-group" id="asideMenu">
+                    <!--Layer list panel-->
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle='collapse' data-parent='#asideMenu' href="#layerListCollapse">Layer List</a>
+                            </h4>
+                        </div>
+                        <div id="layerListCollapse" class="panel-collapse collapse in">
+
+                            <div class="list-group">
+                                <a id='summary' class="list-group-item" href="#">Summary</a>
+                                <a id='population' class="list-group-item" href="#">Population</a>
+                                <a id='sex' class="list-group-item" href="#">Sex</a>
+                                <a id='disability' class="list-group-item" href="#">Disability</a>
+                                <a id='employment' class="list-group-item" href="#">Employment</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Custom result menu-->
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle='collapse' data-parent='#asideMenu' href="#customResultCollapse">Custom Result</a>
+                            </h4>
+                        </div>
+                        <div id="customResultCollapse" class="panel-collapse collapse ">
+                            <div class="list-group">
+                                <a id='allLayer' class="list-group-item" href="#">All</a>
+                                <a id='school' class="list-group-item" href="#">Schools</a>
+                                <a id='health' class="list-group-item" href="#">Health Centers</a>
+                                <a id='subcity' class="list-group-item" href="#">Subcity</a>
+                                <a id='population' class="list-group-item" href="#">Population</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="reportContainer" class="col-sm-8 col-sm-offset-1">
+
+                <div id="reportDiv">
+                    <div id="reportHeader" class=".page-header">
+                        <h3>Please, Select a template from the left panel!</h3>
+                    </div>
+                    <div id="reportBody" class="container-fluid claro">
+                        <div id="tableDiv" style="width: auto;height: auto; "></div>
+                        <div id="pieChartDiv" style="width: auto; height: auto;"></div>
+                        <div id="pieChartLegendDiv" style="width: auto; height: auto;"></div>
+                        <div id="barChartDiv" style="width: auto; height: auto;"></div>
+                        <div id="pieChartDiv" style="width: auto; height: auto;"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+            <script type="text/javascript">
+            $(document).ready(function(){
+                $.getScript('../app/scripts/map/report.js', function() {
+                console.log("report.js loaded");
+                    });
+                
+            });
+        </script>

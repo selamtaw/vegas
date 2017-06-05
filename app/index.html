@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html ng-app="vegas-user">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>VEGAS</title>
+    <link rel="stylesheet" type="text/css" href="styles/lib/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="styles/lib/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="styles/lib/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="styles/lib/bootstrap-social.css">
+    <link rel="stylesheet" href="http://localhost:8080/arcgis_js_api/library/3.20/3.20/esri/css/esri.css" />
+    <link rel="stylesheet" href="http://localhost:8080/arcgis_js_api/library/3.20/3.20/dijit/themes/claro/claro.css" />
+    <link rel="stylesheet" type="text/css" href="styles/styles.css">
+    <link rel="stylesheet" type="text/css" href="styles/map_style.css">
+
+</head>
+
+<body>
+    <div id="main" class="main-section">
+        <nav class="navbar navbar-default navbar-fixed-top navigation" ng-controller="NavController" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+                        aria-controls="navbar">
+						<span class="sr-only">Toggle navigarion</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li ng-class="{active: isSelected(1)}"><a ui-sref="home" ng-click="select(1)"><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Maps</a></li>
+                        <li ng-class="{active: isSelected(2)}"><a ui-sref="report" ng-click="select(2)"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Report</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li id="drawMenuItems" class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Draw
+									<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a id="polygon">Polygon</a></li>
+                                <li><a id="freehandPolygon">FreeHand Polygon</a></li>
+                                <li><a id="circle">Circle</a></li>
+                                <li><a id="triangle">Triangle</a></li>
+                            </ul>
+                        </li>
+                        <li id="drawMenuItems" class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Tools
+										<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li id="legendMenuItem"><a href="#">Legend</a></li>
+                                <li id="analysisMenuItem"><a href="#">Analysis</a></li>
+                            </ul>
+                        </li>
+                        <li><a id="share" href="" data-toggle="modal" data-target="#shareModal"><span class="glyphicon glyphicon-share" aria-hidden="true"></span> Share</a></li>
+                        <li><a id="export" href="" data-toggle="modal" data-target="#exportModal"><span class="glyphicon glyphicon-export" aria-hidden="true"></span> Export</a></li>
+                        <li><a id="feedback" href="" data-toggle="modal" data-target="#feedbackModal"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> Give us feedback</a></li>
+                        <li  ng-class="{active: isSelected(3)}"><a ui-sref="help" ng-click="select(3)"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> Help</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- share modal -->
+        <div id="shareModal" class="modal fade" role="dialog" ng-controller="ShareController">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title"> Share </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a data-toggle="tab" href="#link">Link</a></li>
+                                <li><a data-toggle="tab" href="#email">Email</a></li>
+                                <li><a data-toggle="tab" href="#embed">Embed</a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <div id="link" class="tab-pane fade in active">
+                                    <h4>Share link</h4>
+                                    <div>
+                                        <input class="form-control" type="text" ng-model="share.link"><br>
+                                        <button class="btn btn-primary" clipboard supported="supported" text="linkToCopy" on-copied="success()" on-error="fail(err)">Copy to clipboard</button>
+                                    </div>
+                                    <br>
+                                    <p>Share On:</p>
+                                    <div>
+                                        <a class="btn btn-social-icon btn-google-plus" socialshare socialshare-provider="google" socialshare-url="http://vegas.org.et/map"
+                                            socialshare-popup-height="600" socialshare-popup-width="500" socialshare-trigger="click">
+                                            <i class="fa fa-google-plus"></i>
+                                        </a>
+                                        <a class="btn btn-social-icon btn-facebook" socialshare socialshare-provider="facebook" socialshare-type="share" socialshare-via="145634995501895"
+                                            socialshare-media="images/map.jpg" socialshare-quote="VEGAS" socialshare-hashtags="#vegas"
+                                            socialshare-title="VEGAS" socialshare-mobileiframe="true" socialshare-caption="VEGAS ethiomap"
+                                            socialshare-url="http://vegas.org.et/map" socialshare-popup-height="600" socialshare-popup-width="500"
+                                            socialshare-trigger="click">
+                                            <i class="fa fa-facebook"></i>
+                                        </a>
+                                        <a class="btn btn-social-icon btn-linkedin" socialshare socialshare-provider="linkedin" socialshare-text="{{test.testValue}}"
+                                            socialshare-url="http://vegas.org.et/map" socialshare-description="VEGAS ethiomap"
+                                            socialshare-source="vegas" socialshare-popup-height="600" socialshare-popup-width="500"
+                                            socialshare-trigger="click">
+                                            <i class="fa fa-linkedin"></i>
+                                        </a>
+                                        <a class="btn btn-social-icon btn-twitter" socialshare socialshare-provider="twitter" socialshare-hashtags="vegas, ethiomap"
+                                            socialshare-via="twitter" socialshare-text="VEGAS - test value is: {{test.testValue}}"
+                                            socialshare-url="http://vegas.org.et/map" socialshare-popup-height="600" socialshare-popup-width="500"
+                                            socialshare-trigger="click">
+                                            <i class="fa fa-twitter"></i>
+                                        </a>
+                                        <a class="btn btn-social-icon btn-vk" socialshare socialshare-provider="email" socialshare-body="Hello! check this out.http://vegas.org.et/map"
+                                            socialshare-to="test@test.com" socialshare-cc="test@test.com" socialshare-media="https://www.google.it/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"
+                                            socialshare-subject="Very important email" socialshare-popup-height="600" socialshare-popup-width="500">
+                                            <i class="fa fa-envelope"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div id="email" class="tab-pane fade">
+                                    <form class="form-horizontal" role="form" name="shareEmailForm" ng-submit="shareThroughEmail()" novalidate>
+                                        <div class="form-group" ng-class="{'has-error': shareEmailForm.senderEmail.$error.required  && !shareEmailForm.senderEmail.$pristine}">
+                                            <label class="col-sm-2 control-label" for="from">From:</label>
+                                            <div class="col-sm-10">
+                                                <input type="email" class="form-control" name="senderEmail" id="from" placeholder="Enter your email" ng-model="share.email.from"
+                                                    required>
+                                                <span ng-show="shareEmailForm.senderEmail.$invalid && !shareEmailForm.senderEmail.$pristine" class="glyphicon glyphicon-remove form-control-feedback"
+                                                    aria-hidden="true"></span>
+                                                <span ng-show=" (shareEmailForm.senderEmail.$error.required || shareEmailForm.senderEmail.$invalid) && !shareEmailForm.senderEmail.$pristine"
+                                                    class="help-block">Enter a valid email.</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" ng-class="{'has-error': shareEmailForm.recipientEmail.$error.required  && !shareEmailForm.recipientEmail.$pristine}">
+                                            <label class="col-sm-2 control-label" for="to">To:</label>
+                                            <div class="col-sm-10">
+                                                <input type="email" class="form-control" name="recipientEmail" id="to" placeholder="Enter recipients email" ng-model="share.email.to"
+                                                    required>
+                                                <span ng-show="shareEmailForm.recipientEmail.$invalid && !shareEmailForm.recipientEmail.$pristine" class="glyphicon glyphicon-remove form-control-feedback"
+                                                    aria-hidden="true"></span>
+                                                <span ng-show=" (shareEmailForm.recipientEmail.$error.required || shareEmailForm.recipientEmail.$invalid) && !shareEmailForm.recipientEmail.$pristine"
+                                                    class="help-block">Enter a valid email.</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label" for="message">Message:</label>
+                                            <div class="col-sm-10">
+                                                <textarea class="form-control" rows="6" name="message" id="message" placeholder="Enter personal message(Optional)" ng-model="share.email.message"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-2 col-sm-6">
+                                                <button type="submit" class="btn btn-primary" ng-disabled="shareEmailForm.$invalid"><span class="glyphicon glyphicon-send"></span> Send</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="alert alert-info alert-dismissible" ng-show="showAlert" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+														<span aria-hidden="true">&times;</span></button>
+                                            <p>{{message}}</p>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div id="embed" class="tab-pane fade">
+                                    <h4>Embed size:</h4>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">1080x720
+													<span class="caret"></span></button>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="#">960x720</a></li>
+                                            <li><a href="#">720x560</a></li>
+                                            <li><a href="#">480x320</a></li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <br>
+                                        <p>Embed code:</p>
+                                        <textarea class="form-control" rows="3" name="embedcode" id="embedcode" ng-model="share.embed.code">
+													</textarea>
+                                    </div>
+                                    <br><button class="btn btn-primary" clipboard supported="supported" text="embedCodeToCopy"
+                                        on-copied="success()" on-error="fail(err)">Copy to clipboard</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- export modal -->
+        <div id="exportModal" class="modal fade" role="dialog" ng-controller="ExportController">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title"> Export </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a data-toggle="tab" href="#pdf">PDF</a></li>
+                                <li><a data-toggle="tab" href="#image">Image</a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <div id="pdf" class="tab-pane fade in active">
+                                    <h4>Resolution</h4>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Current Resolution
+													<span class="caret"></span></button>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="#">High</a></li>
+                                            <li><a href="#">Medium</a></li>
+                                            <li><a href="#">Low</a></li>
+                                        </ul>
+                                    </div>
+                                    <br>
+                                    <p>This may take a while to prepare the pdf. Please wait...</p>
+                                    <button id="png-dwd-btn" class="btn btn-primary" data-loading-text="<span class='glyphicon-left glyphicon glyphicon-refresh spinning'></span> Preparing"
+                                        onclick="pdfDownload()"> Download
+												</button>
+                                </div>
+                                <div id="image" class="tab-pane fade">
+                                    <h4>Image resolution</h4>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Current Resolution
+													<span class="caret"></span></button>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="#">High</a></li>
+                                            <li><a href="#">Medium</a></li>
+                                            <li><a href="#">Low</a></li>
+                                        </ul>
+                                    </div>
+                                    <br>
+                                    <p>This may take a while to prepare the image. Please wait...</p>
+                                    <a id="img-dwd-btn" class="btn btn-primary" data-loading-text="<span class='glyphicon-left glyphicon glyphicon-refresh spinning'></span> Preparing"
+                                        onclick="imgDownload()">Download
+												</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- feedback modal -->
+        <div id="feedbackModal" class="modal fade" role="dialog" ng-controller="FeedbackController">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title"> Give us feedback </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <form class="form-horizontal" ng-submit="sendFeedback()" role="form" name="feedbackForm" novalidate>
+                                <div class="form-group" ng-class="{'has-error': feedbackForm.name.$error.required  && !feedbackForm.name.$pristine}">
+                                    <label class="control-label col-sm-2" for="fullname">Full Name</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="name" id="fullname" placeholder="Enter your full name" ng-model="feedback.fullname"
+                                            required>
+                                        <span ng-show=" feedbackForm.name.$error.required && !feedbackForm.name.$pristine" class="help-block">Your name can not be empty.</span>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-class="{'has-error': feedbackForm.email.$error.required  && !feedbackForm.email.$pristine}">
+                                    <label class="control-label col-sm-2" for="emailid">Email</label>
+                                    <div class="col-sm-10">
+                                        <input type="email" class="form-control" name="email" id="emailid" placeholder="Enter your email" ng-model="feedback.email"
+                                            required>
+                                        <span ng-show="feedbackForm.email.$invalid && !feedbackForm.email.$pristine" class="glyphicon glyphicon-remove form-control-feedback"
+                                            aria-hidden="true"></span>
+                                        <span ng-show=" (feedbackForm.email.$error.required || feedbackForm.email.$invalid) && !feedbackForm.email.$pristine" class="help-block">Enter a valid email.</span>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-class="{'has-error': feedbackForm.feedback.$error.required  && !feedbackForm.feedback.$pristine}">
+                                    <label class="col-sm-2 control-label" for="feedback">Your Feedback</label>
+                                    <div class="col-sm-10">
+                                        <textarea class="form-control" rows="10" name="feedback" id="feedback" ng-model="feedback.comment" placeholder="Enter your feedback"
+                                            required></textarea>
+                                        <span ng-show=" feedbackForm.feedback.$error.required  && !feedbackForm.feedback.$pristine" class="help-block">Your feedback can not be empty.</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        <button type="submit" class="btn btn-primary" ng-disabled="feedbackForm.$invalid"><span class="glyphicon glyphicon-send" ></span> Send</button>
+                                    </div>
+                                </div>
+                                <div class="alert alert-info alert-dismissible" ng-show="showAlert" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+												<span aria-hidden="true">&times;</span></button>
+                                    <p>{{message}}</p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ui-view></div>
+    </div>
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-5 col-xs-offset-1 col-sm-3 col-sm-offset-1">
+                    <h5>Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a ui-sref="home">Home</a></li>
+                        <li><a ui-sref="report">Report</a></li>
+                        <li><a ui-sref="help">Help</a></li>
+                        <li><a ui-sref="aboutus">About Us</a></li>
+                        <li><a ui-sref="termsandconds">Terms and conditions</a></li>
+                    </ul>
+                </div>
+                <div class="col-xs-6 col-sm-4">
+                    <h5>Our Address</h5>
+                    <address>
+                        <i class="fa fa-map-marker"></i> Algeria street<br> piassa, Addis Ababa<br>
+                        <i class="fa fa-phone"></i> Tel.: +251 1239 8759<br>
+                        <i class="fa fa-fax"></i> Fax: +251 1235 9023<br>
+                        <i class="fa fa-envelope"></i> Email: <a href="mailto:vegas@vegas.gov.et">vegas@vegas.gov.et</a>
+                    </address>
+                </div>
+                <div class="col-xs-12 col-sm-4">
+                    <div style="padding: 40px 10px;">
+                        <a class="btn btn-social-icon btn-google-plus" socialshare socialshare-provider="google" socialshare-url="http://vegas.org.et/map"
+                            socialshare-popup-height="600" socialshare-popup-width="500" socialshare-trigger="click">
+                            <i class="fa fa-google-plus"></i>
+                        </a>
+                        <a class="btn btn-social-icon btn-facebook" socialshare socialshare-provider="facebook" socialshare-type="share" socialshare-via="145634995501895"
+                            socialshare-media="images/map.jpg" socialshare-quote="VEGAS" socialshare-hashtags="#vegas" socialshare-title="VEGAS"
+                            socialshare-mobileiframe="true" socialshare-caption="VEGAS ethiomap" socialshare-url="http://vegas.org.et/map"
+                            socialshare-popup-height="600" socialshare-popup-width="500" socialshare-trigger="click">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                        <a class="btn btn-social-icon btn-linkedin" socialshare socialshare-provider="linkedin" socialshare-text="{{test.testValue}}"
+                            socialshare-url="http://vegas.org.et/map" socialshare-description="VEGAS ethiomap" socialshare-source="vegas"
+                            socialshare-popup-height="600" socialshare-popup-width="500" socialshare-trigger="click">
+                            <i class="fa fa-linkedin"></i>
+                        </a>
+                        <a class="btn btn-social-icon btn-twitter" socialshare socialshare-provider="twitter" socialshare-hashtags="vegas, ethiomap"
+                            socialshare-via="twitter" socialshare-text="VEGAS - test value is: {{test.testValue}}" socialshare-url="http://vegas.org.et/map"
+                            socialshare-popup-height="600" socialshare-popup-width="500" socialshare-trigger="click">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                        <a class="btn btn-social-icon btn-vk" socialshare socialshare-provider="email" socialshare-body="Hello! check this out.http://vegas.org.et/map"
+                            socialshare-to="test@test.com" socialshare-cc="test@test.com" socialshare-media="https://www.google.it/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"
+                            socialshare-subject="Very important email" socialshare-popup-height="600" socialshare-popup-width="500">
+                            <i class="fa fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <p></p>
+                    <p align="center">&copy; Copyright 2017 VEGAS</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script type="text/javascript" src="../lib/jquery.min.js"></script>
+    <script type="text/javascript" src="../lib/html2canvas.js"></script>
+    <script type="text/javascript" src="../lib/jspdf.debug.js"></script>
+    <script type="text/javascript" src="../lib/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../lib/angular.min.js"></script>
+    <script type="text/javascript" src="../lib/angular-resource.min.js"></script>
+    <script type="text/javascript" src="../lib/angular-ui-router.min.js"></script>
+    <script type="text/javascript" src="../lib/angular-socialshare.min.js"></script>
+    <script type="text/javascript" src="../lib/angular-clipboard.js"></script>
+    <script type="text/javascript" src="scripts/user-app.js"></script>
+    <script type="text/javascript" src="scripts/usersControllers.js"></script>
+    <script type="text/javascript" src="scripts/services.js"></script>
+    <script type="text/javascript" src="scripts/scripts.js"></script>
+    <script>
+        var dojoConfig = {
+            has: {
+                "dojo-debug-messages": true
+            },
+            parseOnLoad: false,
+            locale: 'en-us',
+            async: true,
+            cahceBust: true,
+            packages: [{
+                name: 'appWidgets',
+                location: '/vegas/app/scripts/map/widgets'
+            }, {
+                name: 'app',
+                location: '/vegas/app/scripts/map'
+            }]
+        }
+    </script>
+    <script src="http://localhost:8080/arcgis_js_api/library/3.20/3.20/init.js"></script>
+</body>
+
+</html>

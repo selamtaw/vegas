@@ -1,0 +1,241 @@
+<div ng-controller="adminCtrl">
+        <nav class="navbar navbar-default navbar-fixed-top navigation" role="navigation" ng-controller="NavController">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigarion</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a ui-sref="admin"></span> Manage Operators</a></li>
+                        <!-- <li><a href="view_activity.html"> View Activity</a></li> -->
+                    </ul>	
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="">
+                            <span class="glyphicon glyphicon-user"></span> {{user.fullname}}
+                            <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                            <li><a id="changepassword" data-toggle="modal" href="" data-target="#changePasswordModal">Change Password</a></li>
+                            <li><a ui-sref="login" ng-click="logout()">Logout</a></li>
+                            </ul>
+                        </li>
+                    </ul>			
+                </div>		
+            </div>
+        </nav>
+
+        <!-- add operators modal -->
+        <div id="addOperatorsModal" class="modal fade" role="dialog" ng-controller="AddOperatorsController">
+            <div class="modal-dialog">
+            <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title"> Add operator </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <form class="form-horizontal" name="addOperatorsForm" role="form" ng-submit="addOperator()" novalidate>
+                                <div class="form-group" ng-class="{'has-error': addOperatorsForm.name.$error.required  && !addOperatorsForm.name.$pristine}">
+                                    <label class="control-label col-sm-2" for="fullname">Full Name</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="name" id="fullname" ng-model="operator.fullname" placeholder="Full Name" required>
+                                        <span ng-show=" addOperatorsForm.name.$error.required && !addOperatorsForm.name.$pristine" class="help-block">Name can not be empty.</span>
+                                    </div>
+                                </div>  
+                                <div class="form-group" ng-class="{'has-error': addOperatorsForm.email.$error.required  && !addOperatorsForm.email.$pristine}">
+                                    <label class="control-label col-sm-2" for="emailid">Email</label>
+                                    <div class="col-sm-10">
+                                        <input type="email" class="form-control" name="email" id="emailid" ng-model="operator.email" placeholder="Email" required>
+                                        <span ng-show="addOperatorsForm.email.$invalid && !addOperatorsForm.email.$pristine" class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                                        <span ng-show=" (addOperatorsForm.email.$error.required || addOperatorsForm.email.$invalid) && !addOperatorsForm.email.$pristine" class="help-block">Enter a valid email.</span>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-class="{'has-error': addOperatorsForm.task.$error.required  && !addOperatorsForm.task.$pristine}">
+                                    <label class="col-sm-2 control-label" for="task">Task</label>
+                                    <div class="col-sm-10">
+                                        <textarea class="form-control" rows="12" name="task" id="task" ng-model="operator.task" placeholder="Task" required></textarea>
+                                        <span ng-show=" addOperatorsForm.task.$error.required && !addOperatorsForm.task.$pristine" class="help-block">Task can not be empty.</span>
+                                    </div>					  	
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        <button type="submit" class="btn btn-primary" ng-disabled="addOperatorsForm.$invalid">Add</button>
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> 
+                                    </div>
+                                </div>
+                                <div class="alert alert-info alert-dismissible" ng-show="showAlert" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span></button>
+                                    <p>{{message}}</p> 
+                                </div> 
+                            </form>				
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- remove operators modal -->
+        <div id="removeOperatorsModal" class="modal fade" role="dialog" ng-controller="RemoveOperatorsController">
+            <div class="modal-dialog">
+            <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title"> Remove operators </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <form class="form-horizontal" role="form" name="removeOperatorsForm">
+                                <div class="form-group" ng-repeat="operator in operators"> 
+                                    <div class="col-sm-offset-1 col-sm-8">
+                                        <div class="checkbox">
+                                            <label><input type="checkbox" ng-click="removeList(operator.id)">{{operator.fullname}}</label>
+                                        </div>
+                                    </div>
+                                </div> 
+                                <div class="alert alert-info alert-dismissible" ng-show="showAlert" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span></button>
+                                    <p>{{message}}</p> 
+                                </div>                              
+                            </form>				
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-primary" ng-click="removeOperators()" ng-disabled="disable">Remove</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- remove operator modal -->
+        <div id="removeModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+            <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title"> Remove operator </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h4>Are you sure you want to remove {{operator.fullname}}?</h4>
+                            </div>
+                        </div>  
+                        <div class="row">
+                            <div class="col-sm-10">
+                                <button type="submit" class="btn btn-primary" ng-click="removeOperator(operator.id)">Yes</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> 
+                            </div>
+                        </div>			
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <!-- change password modal -->
+        <div id="changePasswordModal" class="modal fade" role="dialog" ng-controller="AdminChangePasswordController">
+            <div class="modal-dialog">
+            <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title"> Change password </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <form class="form-horizontal" role="form" name="changePasswordForm" ng-submit="changePassword()" novalidate>
+                                <div class="form-group" ng-class="{'has-error': (changePasswordForm.oldpwd.$error.required  && !changePasswordForm.oldpwd.$pristine)}">
+                                    <label class="control-label col-sm-4" for="oldpwd">Old Password </label>
+                                    <div class="col-sm-7">
+                                        <input type="password" class="form-control" id="oldpwd" name="oldpwd" ng-model="oldpwd" placeholder="Enter old password" required>
+                                        <span ng-show=" changePasswordForm.oldpwd.$error.required && !changePasswordForm.oldpwd.$pristine" class="help-block">Password field can not be empty.</span>
+                                       <!--  <span ng-show="oldPwdError" class="help-block">Old password is not correct</span> -->
+                                    </div>
+                                </div>  
+                                <div class="form-group" ng-class="{'has-error': changePasswordForm.newpwd1.$error.required  && !changePasswordForm.newpwd1.$pristine}">
+                                    <label class="control-label col-sm-4" for="newpwd">New Password</label>
+                                    <div class="col-sm-7">
+                                        <input type="password" class="form-control" id="newpwd" name="newpwd1" ng-model="newpwd1" placeholder="Enter new password" required>
+                                        <span ng-show=" changePasswordForm.newpwd1.$error.required && !changePasswordForm.newpwd1.$pristine" class="help-block">Password field can not be empty.</span>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-class="{'has-error': changePasswordForm.newpwd2.$error.required  && !changePasswordForm.newpwd2.$pristine}">
+                                    <label class="control-label col-sm-4" for="repeatpwd">Repeat Password</label>
+                                    <div class="col-sm-7">
+                                        <input type="password" class="form-control" id="repeatpwd" name="newpwd2" ng-model="newpwd2" placeholder="Repeat new password" required>
+                                        <span ng-show=" changePasswordForm.newpwd2.$error.required && !changePasswordForm.newpwd2.$pristine" class="help-block">Password field can not be empty.</span>
+                                        <span ng-show="(newpwd1 !== newpwd2) && (!changePasswordForm.newpwd2.$pristine) && !changePasswordForm.newpwd2.$error.required " class="help-block">Password doesn't match.</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-4 col-sm-8">
+                                        <button type="submit" class="btn btn-primary" ng-disabled="changePasswordForm.$invalid || (newpwd1 !== newpwd2)">Save</button>
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> 
+                                    </div>
+                                </div>
+                                <div class="alert alert-dismissible" ng-class="{'alert-danger' : oldPwdError , 'alert-info' : !oldPwdError}" ng-show="showAlert || oldPwdError" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span></button>
+                                    <p>{{message}}</p> 
+                                </div> 
+                            </form>				
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<header>
+			<!-- <p>welcome to vegas</p> -->
+		</header>
+
+		<div class="container-fluid">
+			<div class="row" ng-controller="OperatorsController">
+                <div class="col-sm-8 col-sm-offset-2">
+                    <div class="well" style="margin-top: 60px;">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h2 style="text-align: center"> Manage Operators</h2>                               
+                            </div>
+                            <div class="col-sm-12" style="padding-top: 20px ">
+                               <button id="add" class="btn btn-primary" data-toggle="modal" data-target="#addOperatorsModal"><span class="glyphicon glyphicon-plus-sign"></span> Add operator</button>
+                               <button id="remove" class="btn btn-primary" data-toggle="modal" data-target="#removeOperatorsModal" ><span class="glyphicon glyphicon-minus-sign"></span> Remove operator</button>                               
+                            </div>
+                        </div>
+                        <ul class="media-list">
+                            <li class="media" ng-repeat="operator in operators">
+                                 <div class="row operator">
+                                    <div class="col-sm-3">
+                                        <img src="images/12.png" class="img-circle" width="50px">
+                                        <!--<span class="glyphicon glyphicon-user"></span>-->
+                                        <p>{{operator.fullname}}</p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <p>Last login: {{operator.lastlogin | date : 'MM/dd/yyyy @ h:mma'}}</p>
+                                        <p>Last logout: {{operator.lastlogout | date : 'MM/dd/yyyy @ h:mma'}}</p>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <button class="btn btn-primary" ng-click="removeOperator(operator)"><span class="glyphicon glyphicon-minus-sign"></span> Remove</button>
+                                    </div>
+                                </div>  
+                            </li> 
+                        </ul>                       
+                    </div>
+                </div>
+			</div>
+		</div>
+		
+</div>

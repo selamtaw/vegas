@@ -1,0 +1,44 @@
+.login-form {
+	margin-top: 50px;
+	box-shadow: 0px 4px 8px 0px;
+}
+.operator {
+	padding: 10px;
+	margin: 10px;
+	margin-bottom: 20px;
+	background-color: white;
+/*	box-shadow: 0px 4px 8px 0px;*/
+}
+.message {
+	padding: 10px;
+	margin: 10px;
+	margin-bottom: 20px;
+	background-color: white;
+	cursor: pointer;
+}
+.form-control-feedback {
+	text-align:left;
+}
+.unseen {
+	padding: 10px;
+	margin-bottom: 20px;
+	background-color: #3e85c2;
+	box-shadow: 0px 4px 8px 0px;
+	-webkit-text-fill-color:white;
+}
+.seen {
+	padding: 10px;
+	margin-bottom: 20px;
+	background-color: white;
+	box-shadow: 0px 4px 8px 0px;
+	-webkit-text-fill-color:black;
+}
+.badge {
+	background-color: #8e0606;
+}
+.feedback-user {
+	font-size: 40px;
+}
+.next, .previous {
+	cursor: pointer;
+}

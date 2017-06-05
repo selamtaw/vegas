@@ -1,0 +1,94 @@
+{
+  "VED": [
+    {
+      "name": "arada",
+      "kebeles": 12,
+      "population": 322044,
+      "male": 166122,
+      "female": 155922,
+      "hospitals": 11,
+      "schools": 19,
+      "id": 1
+    },
+    {
+      "name": "yeka",
+      "kebeles": 23,
+      "population": 452044,
+      "male": 206122,
+      "female": 245922,
+      "hospitals": 14,
+      "schools": 21,
+      "id": 2
+    },
+    {
+      "name": "bole",
+      "kebeles": 12,
+      "population": 23000,
+      "male": 12000,
+      "female": 11000,
+      "hospitals": 14,
+      "schools": 14,
+      "id": 3
+    },
+    {
+      "name": "kaliti",
+      "kebeles": 10,
+      "population": 110000,
+      "male": 50000,
+      "female": 60000,
+      "hospitals": 9,
+      "schools": 8,
+      "id": 4
+    },
+    {
+      "name": "lideta",
+      "kebeles": 14,
+      "population": 23000,
+      "male": 13000,
+      "female": 10000,
+      "hospitals": 13,
+      "schools": 12,
+      "id": 5
+    },
+    {
+      "name": "akaki",
+      "kebeles": 8,
+      "population": 23000,
+      "male": 10000,
+      "female": 13000,
+      "hospitals": 2,
+      "schools": 4,
+      "id": 6
+    },
+    {
+      "name": "some",
+      "kebeles": 23,
+      "population": 21,
+      "male": 223,
+      "female": 3423,
+      "hospitals": 234,
+      "schools": 23,
+      "id": 7
+    },
+    {
+      "name": "adsfa",
+      "kebeles": 2342,
+      "population": 234,
+      "male": 235,
+      "female": 233,
+      "hospitals": 3435,
+      "schools": 345,
+      "id": 8
+    },
+    {
+      "name": "q",
+      "kebeles": 12,
+      "population": 1200,
+      "male": 3400,
+      "female": 1200,
+      "hospitals": 1200,
+      "schools": 12,
+      "id": 9
+    }
+  ]
+}

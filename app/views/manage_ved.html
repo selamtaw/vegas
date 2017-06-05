@@ -1,0 +1,83 @@
+<div class="container-fluid">
+  <div class="row" style="margin-top: 60px;">
+    <div class="table-responsive">
+    <h4 style="text-align: center"> VED from VERSIS</h4> 
+        <table class="table table-striped">
+            <tr>
+                <th>Sub city</th>
+                <th>Population</th>
+                <th>Male Pop</th>
+                <th>Female Pop</th>                  
+                <th>No of Kebeles</th>
+                <th>No of Hospitals</th>
+                <th>No of Schools</th>              
+            </tr>
+            <tr ng-repeat="sc in VED">
+                <th>{{sc.name}}(sc_no: {{sc.id}})</th>
+                <td>{{sc.population | number}}</td>
+                <td>{{sc.male | number}}</td>
+                <td>{{sc.female | number}}</td>
+                <td>{{sc.kebeles | number}}</td>
+                <td>{{sc.hospitals | number}}</td>  
+                <td>{{sc.schools | number}}</td>              
+            </tr>
+        </table>
+    </div>  
+    <div class="well" ng-controller="updateVEDManualController">
+        <div class="row">
+            <div class="col-sm-11 col-sm-offset-1">
+              <form class="form-horizontal" role="form" name="manualUpdateForm">
+                <h4 style="text-align: center"> Update VED (if auto update failed!) </h4> 
+                  <div class="form-group">                      
+                    <label class="control-label col-sm-3" for="subcity">Sub city:</label>
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control" id="subcity" ng-model="newData.name">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="control-label col-sm-3" for="kebeles">No of Kebeles:</label>
+                    <div class="col-sm-8">
+                      <input type="number" class="form-control" id="kebeles" ng-model="newData.kebeles">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                      <label class="control-label col-sm-3" for="totpop">No of Population:</label>
+                      <div class="col-sm-8">
+                        <input type="number" class="form-control" id="totpop" ng-model="newData.population">
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label class="control-label col-sm-3" for="malepop">No of Male Population:</label>
+                      <div class="col-sm-8">
+                        <input type="number" class="form-control" id="malepop" ng-model="newData.male">
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label class="control-label col-sm-3" for="femalepop">No of Female Population:</label>
+                      <div class="col-sm-8">
+                        <input type="number" class="form-control" id="femalepop" ng-model="newData.female">
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label class="control-label col-sm-3" for="hospitals">No of Hospitals:</label>
+                      <div class="col-sm-8">
+                        <input type="number" class="form-control" id="hospitals" ng-model="newData.hospitals">
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label class="control-label col-sm-3" for="schools">No of Schools:</label>
+                      <div class="col-sm-8">
+                        <input type="number" class="form-control" id="schools" ng-model="newData.schools">
+                      </div>
+                  </div>                                                                                  
+                  <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-8">
+                      <button type="submit" class="btn btn-primary" ng-click="save()">Save</button>
+                    </div>
+                  </div>
+                </form>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
