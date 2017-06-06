@@ -29,6 +29,7 @@ require([
         'esri/dijit/PopupTemplate',
         'esri/dijit/Legend',
         'esri/dijit/Scalebar',
+        'esri/dijit/HomeButton',
 
         'dojo/domReady!'
     ],
@@ -60,7 +61,8 @@ require([
         Popup,
         PopupTemplate,
         Legend,
-        Scalebar
+        Scalebar,
+        HomeButton
     ) {
         'use strict';
         //Initialize the analysis widget
@@ -71,10 +73,10 @@ require([
         var initialExtent = new Extent({
 
             "type": "extent",
-            "xmin": 439052.03684105584,
-            "ymin": 969670.7376126263,
-            "xmax": 524814.6006568756,
-            "ymax": 1009723.7404340052,
+            "xmin": 459925.0029836025,
+            "ymin": 970352.6281422524,
+            "xmax": 502806.2848915126,
+            "ymax": 1005286.462690448,
             "spatialReference": {
                 "wkid": 20137,
                 "latestWkid": 20137
@@ -90,6 +92,11 @@ require([
             extent: initialExtent,
             infoWindow: popup,
         });
+        //Home button which enables the user to zoom to the default extent
+        var homeButton = new HomeButton({
+            map: map
+        }, "homeButtonDiv");
+        homeButton.startup();
         var openStreetMapLayer = new OpenStreetMapLayer();
         //map.addLayer(openStreetMapLayer);
         //Add a scale bar to the map
