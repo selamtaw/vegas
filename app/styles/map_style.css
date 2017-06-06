@@ -48,6 +48,19 @@
     margin-right: -12px;
 }
 
+#drawPanel {
+    position: absolute;
+    z-index: 1;
+    display: none;
+    opacity: 1;
+    left: auto;
+    right: 80px;
+    bottom: auto;
+    top: 60px;
+    width: auto;
+    height: auto;
+}
+
 #legendPanel {
     position: absolute;
     z-index: 1;
@@ -66,11 +79,13 @@
     z-index: 1;
     display: none;
     opacity: 1;
-    left: 10%;
-    right: auto;
+    right: 5%;
     bottom: 0px;
-    top: auto;
-    width: 80%;
+    width: 60%;
+    height: 300px;
+}
+#analysisResult{
+    overflow-y: scroll;
     height: 250px;
 }
 

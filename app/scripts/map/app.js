@@ -1,4 +1,4 @@
-var map;
+var map, toolBar, geomTask;
 require([
         'app/addisInfo',
 
@@ -16,12 +16,20 @@ require([
         'esri/InfoTemplate',
         'esri/layers/FeatureLayer',
         'esri/map',     
+        'esri/toolbars/draw',
+        'esri/graphic',
         'esri/layers/OpenStreetMapLayer',
 
         'esri/symbols/SimpleMarkerSymbol',
         'esri/symbols/SimpleFillSymbol',
+        'esri/symbols/SimpleLineSymbol',
         'esri/tasks/query',
         'esri/tasks/QueryTask',
+        'esri/tasks/FindTask',
+        "esri/tasks/IdentifyTask",
+        "esri/tasks/IdentifyParameters",
+        "esri/tasks/FindParameters",
+
         'esri/renderers/ClassBreaksRenderer',
 
         'esri/dijit/Search',
@@ -30,6 +38,7 @@ require([
         'esri/dijit/Legend',
         'esri/dijit/Scalebar',
         'esri/dijit/HomeButton',
+        'dijit/registry',
 
         'dojo/domReady!'
     ],
@@ -50,11 +59,19 @@ require([
         InfoTemplate,
         FeatureLayer,
         Map,
+        Draw,
+        Graphic,
         OpenStreetMapLayer,
         SimpleMarkerSymbol,
         SimpleFillSymbol,
+        SimpleLineSymbol,
         Query,
         QueryTask,
+        FindTask,
+        IdentifyTask,
+        IdentifyParameters,
+        FindParameters,
+
         ClassBreaksRenderer,
 
         Search,
@@ -62,7 +79,8 @@ require([
         PopupTemplate,
         Legend,
         Scalebar,
-        HomeButton
+        HomeButton,
+        registry
     ) {
         'use strict';
         //Initialize the analysis widget
@@ -104,8 +122,8 @@ require([
             map: map,
             scalebarUnit: 'metric'
         });
-
         map.infoWindow.resize(300, 300);
+        map.on('load', createToolbar);
         //capitalization of attributes name in the layer matters!
         //Addis Ababa city layer
         var template = new InfoTemplate();
@@ -245,7 +263,103 @@ require([
         //Searching Features in the map
         var queryTask;
         var query;
+        var findTask;
+        //Listen to Draw link on the nav
+        var drawActive = false;
+        var selectedTool = null;
+        $('#draw').click(function () {
+            $("#drawPanel").toggle('slow');
+            $("#legendPanel").hide('slow');
+            search.hide();
+            map.hideZoomSlider();
+        });
+        $('input[name="drawingItem"]:radio').on('change', function (e) {
+            map.graphics.clear();
+            toolBar.activate(Draw[e.target.value]);
+            map.setInfoWindowOnClick(false);
+            map.disableScrollWheelZoom();
+            map.disableDoubleClickZoom();
+        });
+        //Deactivate Drawing
+        $('#finishDraw').click(function () {
+            map.showZoomSlider();
+            search.show();
+            map.setInfoWindowOnClick(true);
+            map.graphics.clear();
+            map.enableScrollWheelZoom();
+            map.enableDoubleClickZoom();
+        });
+        //On map load create the toolbar
+        function createToolbar(themap) {
+            toolBar = new Draw(map);
+            toolBar.on('draw-end', addDrawingToMap);
+        }
+        //Show the drawn graphic on the map
+        function addDrawingToMap(evt) {
+            var symbol;
+            toolBar.deactivate();
+            console.log(evt.geometry.type);
+            console.log("Drawing finished");
+            switch (evt.geometry.type) {
+                case "point":
+                    symbol = new SimpleMarkerSymbol();
+                    break;
+                case "polygon":
+                    symbol = new SimpleFillSymbol();
+                    break;
+                case "polyline":
+                    symbol = new SimpleLineSymbol();
+                    break;
+                default:
+                    symbol = new SimpleFillSymbol();
+                    break;
+            }
+            var graphic = new Graphic(evt.geometry, symbol);
+            map.graphics.add(graphic);
+            //Initiate analysis
+            spatialAnalysis(evt.geometry);
+            //map.graphics.clear();
+        }
 
+        function spatialAnalysis(geometryInput) {
+            var searchLayerUrl = null;
+            if (activeLayerId == null) {
+                console.log("No active layer");
+                searchLayerUrl = "http://localhost:6080/arcgis/rest/services/vegas/MapServer/0";
+            } else {
+                searchLayerUrl = "http://localhost:6080/arcgis/rest/services/vegas/MapServer/" + activeLayerId;
+            }
+            queryTask = new QueryTask(searchLayerUrl);
+            query = new Query();
+            query.where = '1=1';
+            query.geometry = geometryInput;
+            query.returnGeometry = true;
+            query.outFields = ["*"];
+
+            var queryDeferred = queryTask.execute(query);
+            queryDeferred.then(
+                function (result) {
+                    console.log(result.features.length);
+                    if (result.features.length > 0) {
+
+                        var featuresList = result.features;
+                        var header = "<h4>" + featuresList.length + " result found!</h4>"
+                        var tableHead = "<div class=\"table-responsive table-condensed table-striped\"> <table class='table table-hover table-bordered'>";
+                        var tableBody = "<tr><td><b><b>Name of the feature</b></td><td><b>Type</b></td></tr>";
+                        featuresList.forEach(function (feature) {
+                            console.log(feature);
+                            tableBody += "<tr><td>" + feature.attributes.NAME + "</td><td>" + feature.attributes.TYPE + "</td></tr>";
+                        }, this);
+                        var tableFooter = "</table></div>";
+                        dom.byId('analysisResult').innerHTML = tableHead + tableBody + tableFooter;
+                    }
+                    $('#analysisWidgetDiv').show('slow');
+                },
+                function (err) {
+                    console.log(err);
+                }
+            );
+        }
         //Displays search result features on the map
         function showResults(rslt) {
             var result = rslt;
@@ -273,7 +387,6 @@ require([
                 map.graphics.add(feature);
 
             }, this);
-
             featureArray[2].forEach(function (element) {
                 console.log(element)
                 var feature = element.feature;
@@ -282,9 +395,7 @@ require([
                 map.graphics.add(feature);
 
             }, this);
-
         }
-
         //Event lister to nav links
         //listner to drawMenuItems menu
         $('#drawMenuItems li').click(
@@ -296,6 +407,7 @@ require([
             var effect = $(this).data('effect');
             $(this).closest('.panel')[effect]();
         });
+
         //click event listner for legend link from the navbar
         $("#analysisMenuItem").click(
             function () {

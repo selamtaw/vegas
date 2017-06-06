@@ -1,4 +1,23 @@
 <div id="mainContainer">
+    <!--Draw Tool bar div-->
+    <div id="drawPanel" class="panel panel-default panelCon">
+        <div class="panel-heading">
+            <span class="panel-titletext">Draw</span>
+            <span id="finishDraw" class="pull-right clickable" data-effect="slideUp">
+                <i class="fa fa-times"></i>
+            </span>
+        </div>
+        <div class="panel-body">
+            <div id="draw">Choose Draw Tool</div>
+            <label class="radio-inline"><input type="radio" value="CIRCLE" name="drawingItem" >Circle</label>
+            <label class="radio-inline"><input type="radio" value="MULTI_POINT" name="drawingItem" >Multi Point</label>
+            <label class="radio-inline"><input type="radio" value="POLYGON" name="drawingItem">Polygon</label>
+            <label class="radio-inline"><input type="radio" value="FREEHAND_POLYGON" name="drawingItem">Freehand Polygon</label>
+            <label class="radio-inline"><input type="radio" value="TRIANGLE" name="drawingItem">Triangle</label>
+            <label class="radio-inline"><input type="radio" value="POLYLINE" name="drawingItem">Poly Line</label>
+            <button id="analyseButton" class="btn btn-info">Analyse</button>
+        </div>
+    </div>
     <!--legend div-->
     <div id="legendPanel" class="panel panel-default panelCon">
         <div class="panel-heading">
@@ -33,7 +52,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                        <a data-toggle='collapse' data-parent='#asideMenu' href="#layerListCollapse">Layer List</a>
+                            <a data-toggle='collapse' data-parent='#asideMenu' href="#layerListCollapse">Layer List</a>
                         </h4>
                     </div>
                     <div id="layerListCollapse" class="panel-collapse collapse in">
@@ -48,7 +67,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                        <a data-toggle='collapse' data-parent='#asideMenu' href="#customResultCollapse">Custom Result</a>
+                            <a data-toggle='collapse' data-parent='#asideMenu' href="#customResultCollapse">Custom Result</a>
                         </h4>
                     </div>
                     <div id="customResultCollapse" class="panel-collapse collapse">
@@ -66,18 +85,18 @@
             <div id="legendPane">
                 <div id="legendDiv"></div>
             </div>
-            <div class="container-fluid claro" id="mapDiv" >
+            <div class="container-fluid claro" id="mapDiv">
                 <div id="homeButtonDiv">
                 </div>
             </div>
-            
+
         </div>
     </div>
 </div>
 <script type="text/javascript">
-    $(document).ready(function(){
-        $.getScript('../app/scripts/map/app.js', function() {
-        console.log("App.js loaded");
-            });
+    $(document).ready(function () {
+        $.getScript('../app/scripts/map/app.js', function () {
+            console.log("App.js loaded");
+        });
     });
 </script>

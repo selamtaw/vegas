@@ -30,21 +30,21 @@
 						<span class="icon-bar"></span>
 					</button>
                 </div>
-                <div id="navbar" class="navbar-collapse collapse">
+                <div id="navbar" class="navbar-collapse collapse" >
                     <ul class="nav navbar-nav">
                         <li ng-class="{active: isSelected(1)}"><a ui-sref="home" ng-click="select(1)"><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Maps</a></li>
                         <li ng-class="{active: isSelected(2)}"><a ui-sref="report" ng-click="select(2)"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Report</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li id="drawMenuItems" class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Draw
+                        <li id="drawMenuItems">
+                            <a id="draw" data-toggle="dropdown" href="#">Draw
 									<span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li><a id="polygon">Polygon</a></li>
-                                <li><a id="freehandPolygon">FreeHand Polygon</a></li>
-                                <li><a id="circle">Circle</a></li>
-                                <li><a id="triangle">Triangle</a></li>
-                            </ul>
+                            <!--<ul class="dropdown-menu">
+                                <li id="polygon"><a href="#">Polygon</a></li>
+                                <li id="freehandPolygon"><a href="#">FreeHand Polygon</a></li>
+                                <li id="circle"><a href="#">Circle</a></li>
+                                <li id="triangle"><a href="#">Triangle</a></li>
+                            </ul>-->
                         </li>
                         <li id="drawMenuItems" class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">Tools
@@ -57,7 +57,7 @@
                         <li><a id="share" href="" data-toggle="modal" data-target="#shareModal"><span class="glyphicon glyphicon-share" aria-hidden="true"></span> Share</a></li>
                         <li><a id="export" href="" data-toggle="modal" data-target="#exportModal"><span class="glyphicon glyphicon-export" aria-hidden="true"></span> Export</a></li>
                         <li><a id="feedback" href="" data-toggle="modal" data-target="#feedbackModal"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> Give us feedback</a></li>
-                        <li  ng-class="{active: isSelected(3)}"><a ui-sref="help" ng-click="select(3)"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> Help</a></li>
+                        <li ng-class="{active: isSelected(3)}"><a ui-sref="help" ng-click="select(3)"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> Help</a></li>
                     </ul>
                 </div>
             </div>
