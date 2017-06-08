@@ -358,7 +358,7 @@ angular.module('vegas.adminController',[])
 
 		$scope.message = "";
 		$scope.showAlert = false;
-
+		console.log("What is gonig on?");
 		homeFactory.getOperators().query(
 			function(response){
 				$scope.operators = response;

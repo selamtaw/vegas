@@ -14,12 +14,11 @@
     <link rel="stylesheet" href="http://localhost:8080/arcgis_js_api/library/3.20/3.20/dijit/themes/claro/claro.css" />
     <link rel="stylesheet" type="text/css" href="styles/styles.css">
     <link rel="stylesheet" type="text/css" href="styles/map_style.css">
-
 </head>
 
 <body>
-    <div id="main" class="main-section">
-        <nav class="navbar navbar-default navbar-fixed-top navigation" ng-controller="NavController" role="navigation">
+    <div id="main" class="main-section" ng-controller="NavController">
+        <nav class="navbar navbar-default navbar-fixed-top navigation" role="navigation">
             <div class="container-fluid">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false"
@@ -30,7 +29,7 @@
 						<span class="icon-bar"></span>
 					</button>
                 </div>
-                <div id="navbar" class="navbar-collapse collapse" >
+                <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li ng-class="{active: isSelected(1)}"><a ui-sref="home" ng-click="select(1)"><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Maps</a></li>
                         <li ng-class="{active: isSelected(2)}"><a ui-sref="report" ng-click="select(2)"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Report</a></li>
@@ -39,12 +38,7 @@
                         <li id="drawMenuItems">
                             <a id="draw" data-toggle="dropdown" href="#">Draw
 									<span class="caret"></span></a>
-                            <!--<ul class="dropdown-menu">
-                                <li id="polygon"><a href="#">Polygon</a></li>
-                                <li id="freehandPolygon"><a href="#">FreeHand Polygon</a></li>
-                                <li id="circle"><a href="#">Circle</a></li>
-                                <li id="triangle"><a href="#">Triangle</a></li>
-                            </ul>-->
+
                         </li>
                         <li id="drawMenuItems" class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">Tools
@@ -217,7 +211,7 @@
                                     <br>
                                     <p>This may take a while to prepare the pdf. Please wait...</p>
                                     <button id="png-dwd-btn" class="btn btn-primary" data-loading-text="<span class='glyphicon-left glyphicon glyphicon-refresh spinning'></span> Preparing"
-                                        onclick="pdfDownload()"> Download
+                                        ng-click="pdfDownload(active)"> Download
 												</button>
                                 </div>
                                 <div id="image" class="tab-pane fade">
@@ -234,7 +228,7 @@
                                     <br>
                                     <p>This may take a while to prepare the image. Please wait...</p>
                                     <a id="img-dwd-btn" class="btn btn-primary" data-loading-text="<span class='glyphicon-left glyphicon glyphicon-refresh spinning'></span> Preparing"
-                                        onclick="imgDownload()">Download
+                                        ng-click="imgDownload(active)">Download
 												</a>
                                 </div>
                             </div>
@@ -390,5 +384,4 @@
     </script>
     <script src="http://localhost:8080/arcgis_js_api/library/3.20/3.20/init.js"></script>
 </body>
-
 </html>

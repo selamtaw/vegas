@@ -230,14 +230,14 @@ require([
         //Holds currently selected layer id
         var activeLayerId = null;
         //Listen to All layer button click event
-        on(dom.byId('allLayer'), 'click', function () {
+        $('#allLayer').click(function () {
             map.addLayer(schoolLayer);
             map.addLayer(healthCenterLayer);
             activeLayerId = null;
             map.graphics.clear();
         });
         //Listen to the school layer click button
-        on(dom.byId('school'), 'click', function () {
+        $('#school').click(function () {
             map.removeLayer(healthCenterLayer);
             map.addLayer(schoolLayer);
             activeLayerId = 1;
@@ -245,7 +245,7 @@ require([
         });
 
         //Listen to the health layer click button
-        on(dom.byId('health'), 'click', function () {
+        $('#health').click(function () {
             map.removeLayer(schoolLayer);
             map.addLayer(healthCenterLayer);
             activeLayerId = 0;
@@ -253,7 +253,7 @@ require([
         });
 
         //Listen to the addis ababa subcity layer click button
-        on(dom.byId('subcity'), 'click', function () {
+        $('#population').click(function () {
             map.removeLayer(healthCenterLayer);
             map.removeLayer(schoolLayer);
             map.addLayer(addisAbabaLayer);

@@ -1,5 +1,4 @@
 'use strict';
-
 angular.module('vegas-admin',['vegas.adminController','vegas.service','ui.router','ngResource'])
 	.config(function($stateProvider){
 		$stateProvider

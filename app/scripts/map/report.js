@@ -10,6 +10,8 @@ require([
         'dojo/_base/array',
         'dojo/parser',
 
+        'dijit/registry',
+
         'dojox/charting/Chart',
         'dojox/charting/widget/Legend',
         'dojox/charting/plot2d/Pie',
@@ -39,6 +41,8 @@ require([
         number,
         array,
         parser,
+
+        registry,
 
         Chart,
         Legend,
@@ -113,7 +117,7 @@ require([
                 femaleTotal += subcityTemp.female;
                 maleTotal += subcityTemp.male;
                 subcitiesData.push(subcityTemp);
-                
+
             }, this);
             subcitiesData.forEach(function (subcity) {
                 subcityNameList.push({
@@ -134,7 +138,7 @@ require([
                     return;
                 }
                 resetReportContent();
-                dom.byId('reportHeader').innerHTML = '<h3>Addis Ababa Vital Events report</h3> <br>The Addis Ababa city current population as registered by VERA is ' + totalPopulation;
+                dom.byId('reportHeader').innerHTML = '<h3>Addis Ababa Vital Events report</h3> <br><div class="well well-sm">The Addis Ababa city current population as registered by VERA is ' + totalPopulation + '</div>';
                 var tableHead = "<div class='table-responsive '> <table class='table table-hover table-bordered'>";
                 var tableBody = "<tr><td><b><b>Subcity Name</b></td><td><b>Male</b></td><td>Female</td><td>Total</td></tr>";
                 subcitiesData.forEach(function (subcity) {
@@ -173,9 +177,9 @@ require([
 
                 chart.render();
                 //Set a legend for the chart
-                var populationLegend = new Legend({
-                    chart: chart
-                }, "pieChartLegendDiv");
+                // var populationLegend = new Legend({
+                //     chart: chart
+                // }, "pieChartLegendDiv");
 
                 //Display a barchar of subcity population
                 var populationBarChart = new Chart("barChartDiv");
@@ -192,7 +196,6 @@ require([
                     vertical: true,
                     min: 0,
                 });
-                console.log(subcityNameList);
                 var barChartData = [];
                 subcitiesData.forEach(function (subcity) {
                     var populationPercent = number.round(subcity.population / totalPopulation * 100, 2);
@@ -216,14 +219,16 @@ require([
             }
         );
         //Listen to the population link click 
-        $('#population').click(
+        $('#layerListCollapse #population').click(
             function () {
                 if (subcitiesData.length === 0) {
                     dom.byId('reportHeader').innerHTML = "<h3>No population data found!</h3>";
                     return;
                 }
+                $('#barChartDiv').width("auto");
+
                 resetReportContent();
-                dom.byId('reportHeader').innerHTML = '<h3>Addis Ababa population report</h3> <br>The Addis Ababa city current population as registered by VERA is ' + totalPopulation;
+                dom.byId('reportHeader').innerHTML = '<h3>Addis Ababa population report</h3> <br><div class="well well-sm">The Addis Ababa city current population as registered by VERA is ' + totalPopulation + '</div>';
                 var tableHead = "<div class='table-responsive '> <table class='table table-hover table-bordered'>";
                 var tableBody = "<tr><td><b><b>Subcity Name</b></td><td><b>Population</b></td></tr>";
                 subcitiesData.forEach(function (subcity) {
@@ -232,7 +237,9 @@ require([
                 var tableFooter = "</table></div>";
                 dom.byId('tableDiv').innerHTML = tableHead + tableBody + tableFooter;
 
+                console.log(chart);
                 var chart = new Chart('pieChartDiv');
+
                 // Apply a color theme to the chart.
                 chart.setTheme(theme);
 
@@ -262,9 +269,9 @@ require([
 
                 chart.render();
                 //Set a legend for the chart
-                var populationLegend = new Legend({
-                    chart: chart
-                }, "pieChartLegendDiv");
+                // var populationLegend = new Legend({
+                //     chart: chart
+                // }, "pieChartLegendDiv");
 
                 //Display a barchar of subcity population
                 var populationBarChart = new Chart("barChartDiv");
@@ -303,15 +310,16 @@ require([
                     new MoveSlice(chart, "default");
                 }
             });
-        //Listen to the school link click 
-        $('#sex').click(
+        //Listen to the Sex link click 
+        $('#layerListCollapse #sex').click(
             function () {
                 if (subcitiesData.length === 0) {
                     dom.byId('reportHeader').innerHTML = "<h3>No population data found!</h3>";
                     return;
                 }
+                $('#barChartDiv').width("auto");
                 resetReportContent();
-                dom.byId('reportHeader').innerHTML = '<h3>Addis Ababa Sex Distribution report</h3> <br>The Addis Ababa city current population as registered by VERA is ' + totalPopulation + '<br>There are a total female of ' + femaleTotal + '<br> Male total of ' + maleTotal;
+                dom.byId('reportHeader').innerHTML = '<h3>Addis Ababa Sex Distribution report</h3> <br><div class="well well-sm">The Addis Ababa city current population as registered by VERA is ' + totalPopulation + '<br>There are a total female of ' + femaleTotal + '<br> Male total of ' + maleTotal + '</dvi>';
                 var tableHead = "<div class='table-responsive '> <table class='table table-hover table-bordered'>";
                 var tableBody = "<tr><td><b><b>Subcity Name</b></td><td><b>Male</b></td><td>Female</td></tr>";
                 subcitiesData.forEach(function (subcity) {
@@ -351,39 +359,39 @@ require([
 
                 chart.render();
                 //Set a legend for the chart
-                var populationLegend = new Legend({
-                    chart: chart
-                }, "pieChartLegendDiv");
+                // var populationLegend = new Legend({
+                //     chart: chart
+                // }, "pieChartLegendDiv");
 
-                // //Display a barchar of subcity population
-                // var populationBarChart = new Chart("barChartDiv");
-                // populationBarChart.setTheme(theme);
-                // populationBarChart.addPlot("default", {
-                //     type: "Columns",
-                //     gap: 10,
-                // });
+                //Display a barchar of subcity population
+                var populationBarChart = new Chart("barChartDiv");
+                populationBarChart.setTheme(theme);
+                populationBarChart.addPlot("default", {
+                    type: "Columns",
+                    gap: 10,
+                });
 
-                // populationBarChart.addAxis('x', {
-                //     labels: subcityNameList
-                // });
-                // populationBarChart.addAxis('y', {
-                //     vertical: true,
-                //     min: 0,
-                // });
-                // var barChartData = [];
-                // subcitiesData.forEach(function (subcity) {
-                //     var populationPercent = number.round(subcity.population / totalPopulation * 100, 2);
-                //     var chartObject = {
-                //         y: subcity.population,
-                //         X: barChartData.length + 1,
-                //         text: subcity.name + ' <br> ' + populationPercent + ' %<br>',
-                //         Tooltip: subcity.name + ' <br> ' + populationPercent + ' %<br>',
-                //     }
-                //     barChartData.push(chartObject);
-                // }, this);
-                // populationBarChart.addSeries("PopulationSplit", barChartData);
-                // defaultChartSetting(populationBarChart);
-                // populationBarChart.render();
+                populationBarChart.addAxis('x', {
+                    labels: subcityNameList
+                });
+                populationBarChart.addAxis('y', {
+                    vertical: true,
+                    min: 0,
+                });
+                var barChartData = [];
+                subcitiesData.forEach(function (subcity) {
+                    var populationPercent = number.round(subcity.population / totalPopulation * 100, 2);
+                    var chartObject = {
+                        y: subcity.population,
+                        X: barChartData.length + 1,
+                        text: subcity.name + ' <br> ' + populationPercent + ' %<br>',
+                        Tooltip: subcity.name + ' <br> ' + populationPercent + ' %<br>',
+                    }
+                    barChartData.push(chartObject);
+                }, this);
+                populationBarChart.addSeries("PopulationSplit", barChartData);
+                defaultChartSetting(populationBarChart);
+                populationBarChart.render();
                 //sets default property for charts
                 function defaultChartSetting(chart) {
                     new Tooltip(chart, "default");
@@ -392,22 +400,190 @@ require([
                 }
             }
         );
-        //Listen to the health link click 
-        $('#disability').click(
+        //Listen to the Disability link click 
+        $('#layerListCollapse #disability').click(
             function () {
-                dom.byId('reportHeader').innerHTML = '<h3>Hello, this is Disability report</h3>';
+                $('#barChartDiv').width("auto");
+                dom.byId('reportHeader').innerHTML = '<h3>Addis Ababa City Disability report</h3>';
             }
         );
         //Listen to the employment link click
-        $('#employment').click(
+        $('#layerListCollapse #employment').click(
             function () {
-                dom.byId('reportHeader').innerHTML = '<h3>Hello, this is Employment report</h3>';
+                $('#barChartDiv').width("auto");
+                dom.byId('reportHeader').innerHTML = '<h3>Addis Ababa City Employment report</h3>';
             }
         );
+
+        //Custom Result Panel Links listener
+        //Custom arda: populaion Links listener
+        $('#aradaCollapse a').click(
+            function () {
+                dom.byId('reportHeader').innerHTML = '<h3>Addis Ababa City Arada Subcity Custom population report</h3>';
+            }
+        );
+        //Custom arada: sex Links listener
+        $('#aradaCollapse a').click(
+            function () {
+                renderSexReport('Arada');
+            }
+        );
+        $('#boleCollapase a').click(
+            function () {
+                renderSexReport('Bole');
+            }
+        );
+        $('#addisKetemaCollapse a').click(
+            function () {
+                renderSexReport('Addis Ketema');
+            }
+        );
+        $('#nefasCollapase ').click(
+            function () {
+                renderSexReport('Nefas Silk Lafto');
+            }
+        );
+        $('#lidetaCollapase a').click(
+            function () {
+                renderSexReport('Lideta');
+            }
+        );
+        $('#kikosCollapase a').click(
+            function () {
+                renderSexReport('Kirkos');
+            }
+        );
+        $('#yekaCollapase a').click(
+            function () {
+                renderSexReport('Yeka');
+            }
+        );
+        $('#guleleCollapase a').click(
+            function () {
+                renderSexReport('Gulele');
+            }
+        );
+        $('#akakiCollapase a').click(
+            function () {
+                renderSexReport('Akaki');
+            }
+        );
+        $('#kolfeCollapase a').click(
+            function () {
+                renderSexReport('Kolfe - Keranio');
+            }
+        );
+
+        //Custom subcity sex data presenter
+        function renderSexReport(subcityName) {
+            if (subcitiesData.length === 0) {
+                dom.byId('reportHeader').innerHTML = "<h3>No Data found!</h3>";
+                return;
+            }
+            resetReportContent();
+            var chart = new Chart('pieChartDiv');
+            // Apply a color theme to the chart.
+            chart.setTheme(theme);
+
+            chart.addPlot("default", {
+                type: "Pie",
+                radius: 150,
+                markers: true,
+                labelOffset: -5,
+                labelStyle: "columns"
+            });
+
+            var pieChartData = [];
+            subcitiesData.forEach(function (subcity) {
+                if (subcity.name === subcityName) {
+                    dom.byId('reportHeader').innerHTML = '<h3>' + subcityName + 'Vital Events report</h3> <br><div class="well well-sm">' + subcityName + ' Subcity current population as registered by VERA is ' + subcity.population + '<br>There are a total female of ' + subcity.female + '<br> Male total of ' + subcity.male + '</div>';
+
+                    var malePercent = number.round(subcity.male / subcity.population * 100, 2);
+                    console.log(malePercent);
+                    var femalePercent = number.round(subcity.female / subcity.population * 100, 2);
+                    var chartObject = {
+                        y: femalePercent,
+                        x: 'Female',
+                        text: subcity.name + ' <br> ' + femalePercent + ' %<br>',
+                        Tooltip: subcity.name + ' <br> ' + femalePercent + ' %<br>',
+                    }
+                    pieChartData.push(chartObject);
+                    chartObject = {
+                        y: malePercent,
+                        x: 'Male',
+                        text: 'Male' + ' <br> ' + malePercent + ' %<br>',
+                        Tooltip: 'Male' + ' <br> ' + malePercent + ' %<br>',
+                    }
+                    pieChartData.push(chartObject);
+                }
+            }, this);
+
+            chart.addSeries("PopulationSplit", pieChartData);
+            console.log(pieChartData);
+            defaultChartSetting(chart);
+
+            chart.render();
+            $('#barChartDiv').width("fit-content");
+            //Display a barchar of subcity population
+            var populationBarChart = new Chart("barChartDiv");
+            populationBarChart.setTheme(theme);
+            populationBarChart.addPlot("default", {
+                type: "Columns",
+                gap: 10,
+            });
+            var chartNameList = [{
+                value: 1,
+                text: 'Female'
+            }, {
+                value: 2,
+                text: 'Male'
+            }];
+            console.log(subcityNameList);
+            console.log(chartNameList);
+            populationBarChart.addAxis('x', {
+                labels: chartNameList
+            });
+            populationBarChart.addAxis('y', {
+                vertical: true,
+                min: 0,
+            });
+            var barChartData = [];
+            subcitiesData.forEach(function (subcity) {
+                if (subcity.name === 'Arada') {
+                    // var malePercent = number.round(subcity.male / subcity.population * 100, 2);
+                    // var femalePercent = number.round(subcity.female / subcity.population * 100, 2);
+                    var chartObject = {
+                        y: subcity.female,
+                        X: 1,
+                        text: 'Female' + ' <br> ' + subcity.female + ' %<br>',
+                        Tooltip: 'Female' + ' <br> ' + subcity.female + ' %<br>',
+                    }
+                    barChartData.push(chartObject);
+                    chartObject = {
+                        y: subcity.male,
+                        X: 2,
+                        text: 'Male' + ' <br> ' + subcity.male + ' %<br>',
+                        Tooltip: 'Male' + ' <br> ' + subcity.male + ' %<br>',
+                    }
+                    barChartData.push(chartObject);
+                }
+            }, this);
+            //console.log($('#barChartDiv').width());
+
+            populationBarChart.addSeries("PopulationSplit", barChartData);
+            defaultChartSetting(populationBarChart);
+            populationBarChart.render();
+            //sets default property for charts
+            function defaultChartSetting(chart) {
+                new Tooltip(chart, "default");
+                new Highlight(chart, "default");
+                new MoveSlice(chart, "default");
+            }
+        }
         //Resets the content of report body
         function resetReportContent() {
             dom.byId("pieChartDiv").innerHTML = "";
-            dom.byId("pieChartLegendDiv").innerHTML = "";
+            //dom.byId("pieChartLegendDiv").innerHTML = "";
             dom.byId("barChartDiv").innerHTML = "";
             dom.byId("tableDiv").innerHTML = "";
             dom.byId("tableDiv").innerHTML = "";
