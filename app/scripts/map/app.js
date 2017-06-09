@@ -13,6 +13,10 @@ require([
         'dojox/charting/themes/Dollar',
 
         'esri/geometry/Extent',
+        'esri/geometry/Geometry',
+        'esri/SpatialReference',
+        'esri/tasks/GeometryService',
+        'esri/tasks/AreasAndLengthsParameters',
         'esri/InfoTemplate',
         'esri/layers/FeatureLayer',
         'esri/map',     
@@ -56,6 +60,10 @@ require([
         theme,
 
         Extent,
+        Geometry,
+        SpatialReference,
+        GeometryService,
+        AreasAndLenghtsParameters,
         InfoTemplate,
         FeatureLayer,
         Map,
@@ -145,7 +153,7 @@ require([
         var addisAbabaInfo = new InfoTemplate("Subcity info", "Name: <b>${WOREDANAME}</b><br>Region Name: ${REGIONNAME}<br>Population: ${POPULATION}<br> Male: <b>${MALE}</b> <br>Female: <b>${FEMALE}</b> <br><b>Disablity</b><br>Deaf: <b>${DIS_DEAF}</b> <br>Blind<b>${DIS_BLIND}</b>");
         var addisAbabaLayer = new FeatureLayer("http://localhost:6080/arcgis/rest/services/vegas/MapServer/2", {
             outFields: ["*"],
-            opacity: 0.3
+            opacity: 0.6
         });
         addisAbabaLayer.setInfoTemplate(template);
 
@@ -169,7 +177,7 @@ require([
         //Ethiopia wereda layer
         var ethiopia_layer = new FeatureLayer("http://localhost:6080/arcgis/rest/services/vegas/MapServer/3", {
             id: "Ethiopia-regions",
-            opacity: 0.3
+            opacity: 0.2
         });
 
         map.addLayer(ethiopia_layer);
@@ -320,14 +328,23 @@ require([
             spatialAnalysis(evt.geometry);
             //map.graphics.clear();
         }
+        // var geometryService = new GeometryService('http://localhost:6080/arcgis/rest/services/Utilities/Geometry/GeometryServer/areasAndLengths');
+        // geometryService.on("areas-and-lengths-complete", outputAreaAndLength);
 
-        function spatialAnalysis(geometryInput) {
+        // function outputAreaAndLength(evtObj) {
+        //     var result = evtObj.result;
+        //     console.log(json.stringify(result));
+        //     dom.byId("area").innerHTML = result.areas[0].toFixed(3) + "KiloMeter";
+        //     dom.byId("length").innerHTML = result.lengths[0].toFixed(3) + "Square Kilometer";
+        // }
+
+        function spatialAnalysis(geometryInput, layerId) {
             var searchLayerUrl = null;
             if (activeLayerId == null) {
                 console.log("No active layer");
                 searchLayerUrl = "http://localhost:6080/arcgis/rest/services/vegas/MapServer/0";
             } else {
-                searchLayerUrl = "http://localhost:6080/arcgis/rest/services/vegas/MapServer/" + activeLayerId;
+                searchLayerUrl = "http://localhost:6080/arcgis/rest/services/vegas/MapServer/" + layerId;
             }
             queryTask = new QueryTask(searchLayerUrl);
             query = new Query();
@@ -342,8 +359,16 @@ require([
                     console.log(result.features.length);
                     if (result.features.length > 0) {
 
+                        // var areasAndLengthParams = new AreasAndLengthsParameters();
+                        // areasAndLengthParams.lengthUnit = GeometryService.UNIT_METER;
+                        // areasAndLengthParams.areaUnit = GeometryService.UNIT_SQUARE_KILOMETERS;
+                        // areasAndLengthParams.calculationType = "geodesic";
+                        // geometryService.simplify([geometry], function (simplifiedGeometries) {
+                        //     areasAndLengthParams.polygons = simplifiedGeometries;
+                        //     geometryService.areasAndLengths(areasAndLengthParams);
+                        // });
                         var featuresList = result.features;
-                        var header = "<h4>" + featuresList.length + " result found!</h4>"
+                        var header = "<h4>  " + featuresList.length + " result found!</h4>"
                         var tableHead = "<div class=\"table-responsive table-condensed table-striped\"> <table class='table table-hover table-bordered'>";
                         var tableBody = "<tr><td><b><b>Name of the feature</b></td><td><b>Type</b></td></tr>";
                         featuresList.forEach(function (feature) {
@@ -351,7 +376,7 @@ require([
                             tableBody += "<tr><td>" + feature.attributes.NAME + "</td><td>" + feature.attributes.TYPE + "</td></tr>";
                         }, this);
                         var tableFooter = "</table></div>";
-                        dom.byId('analysisResult').innerHTML = tableHead + tableBody + tableFooter;
+                        dom.byId('analysisResult').innerHTML = header + tableHead + tableBody + tableFooter;
                     }
                     $('#analysisWidgetDiv').show('slow');
                 },
@@ -417,7 +442,6 @@ require([
         //click event listner for legend link from the navbar
         $('#legendMenuItem').click(
             function (event) {
-                console.log('Legend');
                 $('#legendPanel').toggle('slow');
             });
         var legendParams = {

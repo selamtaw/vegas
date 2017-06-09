@@ -84,9 +84,24 @@
     width: 60%;
     height: 300px;
 }
-#analysisResult{
+
+#analysisResult {
     overflow-y: scroll;
     height: 250px;
+}
+
+#info {
+    bottom: 20px;
+    color: #444;
+    height: auto;
+    font-family: arial;
+    left: 20px;
+    margin: 5px;
+    padding: 10px;
+    position: absolute;
+    text-align: left;
+    width: 200px;
+    z-index: 40;
 }
 
 

@@ -19,8 +19,6 @@ angular.module('vegas.userController', [])
 			}
 		};
 		// check how to get the width and height
-		console.log("What is gonig on?");
-
 		share.embed.size.width = 1080;
 		share.embed.size.height = 720;
 		share.embed.code = `<iframe  width="${share.embed.size.width}" height="${share.embed.size.height}" ` +
