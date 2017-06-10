@@ -421,22 +421,22 @@ require([
 
             console.log(featureArray[1]);
 
-            featureArray[1].forEach(function (element) {
-                console.log(element)
-                var feature = element.feature;
-                feature.setSymbol(symbol);
-
-                map.graphics.add(feature);
-
-            }, this);
-            featureArray[2].forEach(function (element) {
-                console.log(element)
-                var feature = element.feature;
-                feature.setSymbol(symbol);
-
-                map.graphics.add(feature);
-
-            }, this);
+            if (featureArray[1] !== undefined) {
+                featureArray[1].forEach(function (element) {
+                    console.log(element)
+                    var feature = element.feature;
+                    feature.setSymbol(symbol);
+                    map.graphics.add(feature);
+                }, this);
+            }
+            if (featureArray[2] !== undefined) {
+                featureArray[2].forEach(function (element) {
+                    console.log(element)
+                    var feature = element.feature;
+                    feature.setSymbol(symbol);
+                    map.graphics.add(feature);
+                }, this);
+            }
         }
         $('.clickable').on('click', function () {
             var effect = $(this).data('effect');
