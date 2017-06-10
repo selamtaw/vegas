@@ -8,6 +8,7 @@ require([
         'dojo/on',
         'dojo/_base/Color',
         'dojo/parser',
+        'dojo/number',
 
         'dojox/charting/Chart',
         'dojox/charting/themes/Dollar',
@@ -55,6 +56,7 @@ require([
         on,
         Color,
         parser,
+        number,
 
         Chart,
         theme,
@@ -122,6 +124,7 @@ require([
         var homeButton = new HomeButton({
             map: map
         }, "homeButtonDiv");
+
         homeButton.startup();
         var openStreetMapLayer = new OpenStreetMapLayer();
         //map.addLayer(openStreetMapLayer);
@@ -132,6 +135,19 @@ require([
         });
         map.infoWindow.resize(300, 300);
         map.on('load', createToolbar);
+        //Geometry service to compute the area and length of polygons and lines respectively
+        var geometryService = new GeometryService('http://localhost:6080/arcgis/rest/services/Utilities/Geometry/GeometryServer');
+        //Declare and initialize the parameter of the geometryService
+        var areasAndLengthParams = new AreasAndLenghtsParameters();
+        areasAndLengthParams.lengthUnit = GeometryService.UNIT_KILOMETER;
+        areasAndLengthParams.areaUnit = GeometryService.UNIT_SQUARE_KILOMETERS;
+        areasAndLengthParams.calculationType = "geodesic";
+
+        //Ethiopia wereda layer
+        var ethiopia_layer = new FeatureLayer("http://localhost:6080/arcgis/rest/services/vegas/MapServer/3", {
+            id: "Ethiopia-regions",
+            opacity: 0.2
+        });
         //capitalization of attributes name in the layer matters!
         //Addis Ababa city layer
         var template = new InfoTemplate();
@@ -174,11 +190,6 @@ require([
         });
         healthCenterLayer.setInfoTemplate(healthInfo);
 
-        //Ethiopia wereda layer
-        var ethiopia_layer = new FeatureLayer("http://localhost:6080/arcgis/rest/services/vegas/MapServer/3", {
-            id: "Ethiopia-regions",
-            opacity: 0.2
-        });
 
         map.addLayer(ethiopia_layer);
         map.addLayer(addisAbabaLayer);
@@ -265,7 +276,7 @@ require([
             map.removeLayer(healthCenterLayer);
             map.removeLayer(schoolLayer);
             map.addLayer(addisAbabaLayer);
-            activeLayerId = 0;
+            activeLayerId = 2;
             map.graphics.clear();
         });
         //Searching Features in the map
@@ -328,23 +339,17 @@ require([
             spatialAnalysis(evt.geometry);
             //map.graphics.clear();
         }
-        // var geometryService = new GeometryService('http://localhost:6080/arcgis/rest/services/Utilities/Geometry/GeometryServer/areasAndLengths');
-        // geometryService.on("areas-and-lengths-complete", outputAreaAndLength);
+        $('#resetDraw').click(function () {
 
-        // function outputAreaAndLength(evtObj) {
-        //     var result = evtObj.result;
-        //     console.log(json.stringify(result));
-        //     dom.byId("area").innerHTML = result.areas[0].toFixed(3) + "KiloMeter";
-        //     dom.byId("length").innerHTML = result.lengths[0].toFixed(3) + "Square Kilometer";
-        // }
+        });
 
-        function spatialAnalysis(geometryInput, layerId) {
+        function spatialAnalysis(geometryInput) {
             var searchLayerUrl = null;
-            if (activeLayerId == null) {
+            if (activeLayerId == null || activeLayerId === 3) {
                 console.log("No active layer");
                 searchLayerUrl = "http://localhost:6080/arcgis/rest/services/vegas/MapServer/0";
             } else {
-                searchLayerUrl = "http://localhost:6080/arcgis/rest/services/vegas/MapServer/" + layerId;
+                searchLayerUrl = "http://localhost:6080/arcgis/rest/services/vegas/MapServer/" + activeLayerId;
             }
             queryTask = new QueryTask(searchLayerUrl);
             query = new Query();
@@ -356,28 +361,40 @@ require([
             var queryDeferred = queryTask.execute(query);
             queryDeferred.then(
                 function (result) {
-                    console.log(result.features.length);
-                    if (result.features.length > 0) {
-
-                        // var areasAndLengthParams = new AreasAndLengthsParameters();
-                        // areasAndLengthParams.lengthUnit = GeometryService.UNIT_METER;
-                        // areasAndLengthParams.areaUnit = GeometryService.UNIT_SQUARE_KILOMETERS;
-                        // areasAndLengthParams.calculationType = "geodesic";
-                        // geometryService.simplify([geometry], function (simplifiedGeometries) {
-                        //     areasAndLengthParams.polygons = simplifiedGeometries;
-                        //     geometryService.areasAndLengths(areasAndLengthParams);
-                        // });
-                        var featuresList = result.features;
-                        var header = "<h4>  " + featuresList.length + " result found!</h4>"
-                        var tableHead = "<div class=\"table-responsive table-condensed table-striped\"> <table class='table table-hover table-bordered'>";
-                        var tableBody = "<tr><td><b><b>Name of the feature</b></td><td><b>Type</b></td></tr>";
-                        featuresList.forEach(function (feature) {
-                            console.log(feature);
-                            tableBody += "<tr><td>" + feature.attributes.NAME + "</td><td>" + feature.attributes.TYPE + "</td></tr>";
-                        }, this);
-                        var tableFooter = "</table></div>";
-                        dom.byId('analysisResult').innerHTML = header + tableHead + tableBody + tableFooter;
+                    console.log(result);
+                    if (activeLayerId === null || activeLayerId === 2) {
+                        console.log('no result found');
+                        geometryService.simplify([geometryInput], function (simplifiedGeometries) {
+                            areasAndLengthParams.polygons = simplifiedGeometries;
+                            var measurement = geometryService.areasAndLengths(areasAndLengthParams, function (measurements) {
+                                var areaOfGeometry = number.round(measurements.areas[0], 3);
+                                var lengthOfGeometry = number.round(measurements.lengths[0], 3);
+                                dom.byId('geometryInfo').innerHTML = 'Drawn Geometry Drawn info: <b>Area: ' + areaOfGeometry + ' Square KiloMeter</b> and <b>Length: ' + lengthOfGeometry + ' Kilometer</b>';
+                            });
+                        });
+                        $('#analysisWidgetDiv').show('slow');
+                        return;
                     }
+                    //Computes the area of the drawn geometry
+                    geometryService.simplify([geometryInput], function (simplifiedGeometries) {
+                        areasAndLengthParams.polygons = simplifiedGeometries;
+                        var measurement = geometryService.areasAndLengths(areasAndLengthParams, function (measurements) {
+                            var areaOfGeometry = number.round(measurements.areas[0], 3);
+                            var lengthOfGeometry = number.round(measurements.lengths[0], 3);
+                            dom.byId('geometryInfo').innerHTML = 'Drawn Geometry Drawn info: <b>Area: ' + areaOfGeometry + ' Square KiloMeter</b> and <b>Length: ' + lengthOfGeometry + ' Kilometer</b>';
+                        });
+                    });
+                    var featuresList = result.features;
+                    var header = "<h3>" + featuresList.length + " Infrastructures Found!</h3>"
+                    var tableHead = "<div class=\"table-responsive table-condensed table-striped\"> <table class='table table-hover table-bordered'>";
+                    var tableBody = "<tr><td><b><b>Name of the feature</b></td><td><b>Type</b></td></tr>";
+                    featuresList.forEach(function (feature) {
+                        console.log(feature);
+                        tableBody += "<tr><td>" + feature.attributes.NAME + "</td><td>" + feature.attributes.TYPE + "</td></tr>";
+                    }, this);
+                    var tableFooter = "</table></div>";
+                    dom.byId('analysisResult').innerHTML = header + tableHead + tableBody + tableFooter;
+
                     $('#analysisWidgetDiv').show('slow');
                 },
                 function (err) {
@@ -421,13 +438,6 @@ require([
 
             }, this);
         }
-        //Event lister to nav links
-        //listner to drawMenuItems menu
-        $('#drawMenuItems li').click(
-            function (event) {
-
-            }
-        );
         $('.clickable').on('click', function () {
             var effect = $(this).data('effect');
             $(this).closest('.panel')[effect]();

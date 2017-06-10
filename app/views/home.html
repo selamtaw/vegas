@@ -15,7 +15,7 @@
             <label class="radio-inline"><input type="radio" value="FREEHAND_POLYGON" name="drawingItem">Freehand Polygon</label>
             <label class="radio-inline"><input type="radio" value="TRIANGLE" name="drawingItem">Triangle</label>
             <label class="radio-inline"><input type="radio" value="POLYLINE" name="drawingItem">Poly Line</label>
-            <!--<button id="analyseButton" class="btn btn-info">Analyse</button>-->
+            <button id="resetDraw" class="btn btn-info">Reset</button>
         </div>
     </div>
     <!--legend div-->
@@ -39,6 +39,7 @@
             </span>
         </div>
         <div class="panel-box">
+            <div id="geometryInfo" class="well well-sm"></div>
             <div id="analysisResult">
                 <h3 class="well">No result</h3>
             </div>
@@ -76,6 +77,7 @@
                             <a id='allLayer' class="list-group-item" href="#">All</a>
                             <a id='school' class="list-group-item" href="#">Schools</a>
                             <a id='health' class="list-group-item" href="#">Health Centers</a>
+                            <!--<a id='disability' class="list-group-item" href="#">Disability</a>-->
                             <a id='subcity' class="list-group-item" href="#">Subcity</a>
                             <a id='population' class="list-group-item" href="#">Population</a>
                         </div>
